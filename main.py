@@ -10,6 +10,7 @@ from src.utils import (
     compose_and_save_markdown_text
 )
 
+API_KEY = ""
 
 FIRST_N_JOBS_TO_PROCESS = 3
 
@@ -41,7 +42,7 @@ def main():
     keyword = "Software Engineer, C++"
     city = "Tokyo"
 
-    llm = LLM()
+    llm = LLM(api_key=API_KEY)
 
     linkedin_url = get_linkedin_url(geoid=GEOID_OPTIONS[city], keyword=keyword)
     structured_html = get_structured_html(linkedin_url)

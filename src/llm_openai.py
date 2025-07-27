@@ -5,7 +5,6 @@ from src.system_msgs import *
 
 
 MODEL_NAME = "gpt-4.1-nano-2025-04-14"
-API_KEY = ""
 
 
 class LanguagesRequirements(BaseModel):
@@ -14,9 +13,9 @@ class LanguagesRequirements(BaseModel):
 
 
 class LLM:
-    def __init__(self, model_name: str = MODEL_NAME):
+    def __init__(self, api_key: str, model_name: str = MODEL_NAME):
         self.model_name = model_name
-        self.client = OpenAI(api_key=API_KEY)
+        self.client = OpenAI(api_key=api_key)
 
     def extract_skills(self, content: str) -> str:
         response = self.client.responses.create(
