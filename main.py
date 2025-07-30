@@ -12,7 +12,7 @@ from src.utils import (
 
 API_KEY = ""
 
-FIRST_N_JOBS_TO_PROCESS = 3
+FIRST_N_JOBS_TO_PROCESS = 5
 
 GEOID_OPTIONS = {
     "Krakow"  : "103263110",

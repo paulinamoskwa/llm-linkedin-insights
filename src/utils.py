@@ -35,6 +35,7 @@ def get_structured_html(url: str) -> BeautifulSoup:
 class JobPost:
     title: str
     url: str
+    company_name: str
     job_description: str
     detected_post_language: str
     required_skills: str
@@ -45,7 +46,7 @@ class JobPost:
 def compose_and_save_markdown_text(city: str, keyword: str, collection: list[JobPost], summarized_skills: str) -> None:
     overall_text = f"# Search in {city}, keyword `{keyword}`\n\n## Available Jobs\n\n"
     for job in collection:
-        overall_text += f"{job.title}<br>\n{job.url}<br>\n"
+        overall_text += f"[<b>{job.title}</b> - <i>{job.company_name}</i>]({job.url})<br>\n"
         overall_text += f"Post written in: {job.detected_post_language}<br>\n"
         for language in job.required_languages:
             overall_text += f"Required language: {language}<br>\n"
@@ -57,7 +58,7 @@ def compose_and_save_markdown_text(city: str, keyword: str, collection: list[Job
     overall_text += f"\n## Details\n\n"
 
     for job in collection:
-        overall_text += f"{job.title}<br>\n{job.url}<br>\n"
+        overall_text += f"[<b>{job.title}</b> - <i>{job.company_name}</i>]({job.url})<br>\n"
         overall_text += f"Post written in: {job.detected_post_language}<br>\n"
         for language in job.required_languages:
             overall_text += f"Required language: {language}<br>\n"
@@ -79,12 +80,14 @@ def get_job_info(url: str, llm: LLM) -> JobPost:
     structured_html_job = get_structured_html(url)
     title = structured_html_job.find("h1", class_="topcard__title").get_text(strip=True)  # top-card-layout__title
     job_description = structured_html_job.find("div", class_="show-more-less-html__markup").get_text(strip=True)
+    company_name = structured_html_job.find('a', class_='topcard__org-name-link').get_text(strip=True)
     extracted_job_post_language = llm.detect_text_language(content=job_description).capitalize()
     extracted_skills = llm.extract_skills(content=job_description)
     extracted_language_requirements = llm.extract_languages_requirements(content=job_description)
     return JobPost(
         title=title,
         url=url,
+        company_name=company_name,
         job_description=job_description,
         detected_post_language=extracted_job_post_language,
         required_skills=extracted_skills,
